@@ -1,0 +1,17 @@
+[
+    {
+        "nome": "Kobold",
+        "hp": 7,
+        "iniciativa": 0
+    },
+    {
+        "nome": "Bjorn",
+        "hp": 25,
+        "iniciativa": 0
+    },
+    {
+        "nome": "S",
+        "hp": 17,
+        "iniciativa": 0
+    }
+]
