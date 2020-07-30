@@ -8,7 +8,7 @@ class Batalha():
     """classe que retorna a janela de batalha, listaCriaturas recebe um dict: listaCriaturas = {"nome": string, "hp": int, "iniciativa": int}"""
     def __init__(self):
         self.janela = Tk()
-    
+        self.botaoOrdenar = Button(self.janela,width=20,text="Ordenar",bg="green")
         self.botaoAdicionado = 0
         #Carregando o arquivo com as criaturas salvas
         with open('criaturas.json', 'r') as json_file:
@@ -27,7 +27,7 @@ class Batalha():
         self.atualizar()
         self.janela.mainloop()
         self.janela.geometry("500x500+300+300") 
-        self.botaoOrdenar = Button(self.janela, width=20, text="Ordenar", bg="green", command=self.ordenar_batalha)
+        
         
         
         
@@ -49,14 +49,16 @@ class Batalha():
         tamanho = len(self.lutadores)
         for x in range(0,tamanho):
             for y in range(x+1,tamanho):
-                if self.lutadores[x]["iniciativa"] < self.lutadores[y]["iniciativa"]:
+                if self.lutadores[x]["dados"]["iniciativa"] < self.lutadores[y]["dados"]["iniciativa"]:
                     aux = self.lutadores[x]
                     self.lutadores[x] = self.lutadores[y] 
                     self.lutadores[y] = aux
+        self.atualizar()
 
     def adicionar_a_batalha(self,botaoWidget,nome,hp,iniciativa, botao):
         """Adiciona a criatura do botão de criatura a batalha"""
         if self.botaoAdicionado == 0:
+            self.botaoOrdenar = Button(self.janela, width=20, text="Ordenar", bg="green")
             self.botaoOrdenar.pack(anchor=W)
             self.botaoAdicionado = 1
         texto = f"{nome} \n hp: {hp} iniciativa: {iniciativa}"
@@ -72,7 +74,6 @@ class Batalha():
     
     def atualizar(self):
         """posiciona os widgets criados na tela"""
-
         self.parcial()
         self.criar_lista_criaturas()
         if len(self.lutadores) != 0:
@@ -84,6 +85,7 @@ class Batalha():
                 lutador["botaoIniciativa"].pack(anchor=W)
                 lutador["entrada"].pack(anchor=W)
             
+
     def dano(self, lutador):
         """dá o dano a criatura passada como parâmetro"""
         self.lutadores[lutador]["dados"]["hp"] = self.lutadores[lutador]["dados"]["hp"] - int(self.lutadores[lutador]["entrada"].get())
@@ -98,6 +100,7 @@ class Batalha():
         """atribui a iniciativa escrita no input à criatura"""
         self.lutadores[lutador]["dados"]["iniciativa"] = self.lutadores[lutador]["dados"]["iniciativa"] + int(self.lutadores[lutador]["entrada"].get())
         self.atualizar()
+
     
     def parcial(self):
         """cria as funções dos botoes do Tkinter"""
@@ -109,4 +112,4 @@ class Batalha():
                 self.lutadores[x]["botaoCura"]["command"] = partial(self.cura, x)
                 self.lutadores[x]["botaoIniciativa"]["command"] = partial(self.iniciativa, x)
         self.botaoAdicionarCriatura["command"] = partial(self.adicionar_criatura)    
-       
+        self.botaoOrdenar["command"] = partial(self.ordenar_batalha)
